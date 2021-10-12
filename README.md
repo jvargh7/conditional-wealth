@@ -1,2 +1,3 @@
-# conditional-wealth
-Research Note: Conditional wealth for estimating magnitude of positional mobility
+# Research Note: Conditional wealth for estimating magnitude of positional mobility
+
+Conditional measures are a useful statistical decomposition of exposures measured longitudinally. Beyond previous established applications such as identifying periods of growth that are associated with health and human capital, applying this technique to harmonized wealth measures may help identify life stages where changes in relative wealth are associated with health. Although results with and without decomposing wealth into conditional measures are the same, the additional utility of identifying predictors of relative wealth changes at different life stages is important from a public health perspective.
