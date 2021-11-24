@@ -3,8 +3,8 @@ cw_df <- readRDS(paste0(path_dissertation,"/aim 0/working/cw_df.RDS")) %>%
                             TRUE ~ bmi_ya))
 
 
-formula_bmi_p = "bmi_ya ~ male + moscho + moage + chbirtho + rural1983 + rural1991 + rural1994 + rural1998 + rural2002 + eduyr + rural2005 + rural2009 + formal2009 + pc1983 + cwealth1991 + cwealth1994 + cwealth1998 + cwealth2002 + cwealth2005 + cwealth2009"  
-formula_bmi_s = "bmi_ya ~ moscho + moage + chbirtho + rural1983 + rural1991 + rural1994 + rural1998 + rural2002 + eduyr + rural2005 + rural2009 + formal2009 + pc1983 + cwealth1991 + cwealth1994 + cwealth1998 + cwealth2002 + cwealth2005 + cwealth2009"  
+formula_bmi_p = "bmi_ya ~ male + moscho + moage + chbirtho + rural1983_imp + rural1991_imp + rural1994_imp + rural1998_imp + rural2002_imp + eduyr + rural2005_imp + rural2009_imp + formal2009 + pc1983 + cwealth1991 + cwealth1994 + cwealth1998 + cwealth2002 + cwealth2005 + cwealth2009"  
+formula_bmi_s = "bmi_ya ~ moscho + moage + chbirtho + rural1983_imp + rural1991_imp + rural1994_imp + rural1998_imp + rural2002_imp + eduyr + rural2005_imp + rural2009_imp + formal2009 + pc1983 + cwealth1991 + cwealth1994 + cwealth1998 + cwealth2002 + cwealth2005 + cwealth2009"  
 
 
 associations <- bind_rows(
@@ -20,6 +20,15 @@ associations <- bind_rows(
 ) %>% 
   mutate(lci = estimate - 1.96*std.error,
         uci = estimate + 1.96*std.error)
+
+
+associations %>% 
+  mutate(coef_ci = paste0(round(estimate,2)," (",
+                             round(lci,2),", ",
+                          round(uci,2),")")) %>% 
+  dplyr::select(term,coef_ci,sex) %>% 
+  pivot_wider(names_from = sex,values_from=coef_ci) %>% 
+  write.csv(paste0(path_dissertation,"/aim 0/working/supplementary table 3 coefficients sex stratified.csv"))
 
 associations %>% 
   dplyr::filter(term %in% c("pc1983",

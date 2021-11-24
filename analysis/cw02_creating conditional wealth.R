@@ -24,7 +24,10 @@ cw_df <- readRDS(paste0(path_dissertation,"/aim 0/working/public_df.RDS")) %>%
   ) %>% 
   
   # dplyr::filter(!is.na(pc2018)) %>% 
-  mutate_all(~as.numeric(.))
+  mutate_all(~as.numeric(.)) %>% 
+  mutate_at(vars(contains("rural")),
+            list(imp = function(x) case_when(is.na(x) ~ 1,
+                                             TRUE ~ x)))
 
 
 # CONDITIONAL WEALTH --------------
