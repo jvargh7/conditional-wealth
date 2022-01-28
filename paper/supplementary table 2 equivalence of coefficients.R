@@ -44,7 +44,7 @@ stable2_associations <- bind_rows(
   lm_summary(as.formula(formula_bmi_8),data=cw_df) %>% 
     mutate(model = " ~ Wealth 1983 + Wealth 1991 + Conditional 1994")
 ) %>% 
-  dplyr::filter(term %in% c("pc1983","pc1991","pc1994",
+  dplyr::filter(term %in% c("(Intercept)","pc1983","pc1991","pc1994",
                             "cwealth1991","cwealth1994")) %>% 
   mutate(lci = estimate - 1.96*std.error,
          uci = estimate + 1.96*std.error) %>% 
