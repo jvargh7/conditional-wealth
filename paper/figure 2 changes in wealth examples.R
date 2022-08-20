@@ -1,4 +1,4 @@
-plot_conditionals <- function(t_1,t_2,title = ""){
+plot_conditionals <- function(t_1,t_2,title=""){
   
   c_2 = residuals(lm(t_2 ~ t_1))
   
@@ -32,7 +32,8 @@ plot_conditionals <- function(t_1,t_2,title = ""){
     geom_point(size = 5) +
     geom_line(aes(group=id_wealth,linetype=wealth)) +
     theme_bw() +
-    ggtitle(title) + 
+    ggtitle(title) +
+    theme(title = element_text(size = 8)) +
     scale_linetype_discrete(name = "") +
     scale_shape_discrete(name="Percentile at \n t = 1") +
     xlab("Time") +
@@ -43,6 +44,27 @@ plot_conditionals <- function(t_1,t_2,title = ""){
   
   
 }
+
+
+plot_ranks <- function(t_1,t_2,title=""){
+  
+  c_2 = residuals(lm(t_2 ~ t_1))
+  fig = data.frame(t_1,t_2,c_2) %>% 
+    mutate(rank_1 = rank(t_1),
+           rank_2 = rank(t_2)) %>%
+    mutate(rank_change = rank_2 - rank_1) %>% 
+    sample_n(size=100) %>% 
+    ggplot(data=.,aes(x=c_2,y=rank_change)) +
+    geom_point() +
+    xlab("Conditional Wealth") +
+    ylab("Rank at t=2 minus Rank at t=1") +
+    theme_bw() +
+    scale_x_continuous(limits=c(-1,1),breaks=seq(-1,1,by=0.5))
+  
+  fig %>% return(.)
+  
+}
+
 
 
 set.seed(5000)
@@ -91,16 +113,19 @@ params <- expand.grid(b0,b1,sigma) %>%
   rename(b0 = Var1,
          b1 = Var2,
          sigma = Var3)
-i = 5
 pdf(file = "paper/Supplementary File 2.pdf")
 for (i in 1:nrow(params)){
   w_2 = params[i,]$b0 + params[i,]$b1*w_1 + rnorm(1000,0,params[i,]$sigma)
-  title = paste0("w_2 = ",params[i,]$b0," + ",
+  title = paste0("S2Fig ",i,": \nExample with ",
+                 "w_2 = ",params[i,]$b0," + ",
                  params[i,]$b1,"*w_1 + N(0,",
                  params[i,]$sigma,")",
-                 "; \nVariance at time 2: time 1 = ",round(var(w_2),1))
-  plot_conditionals(w_1,w_2,title=title) %>% 
+                 "; \nVariance at time 2: time 1 = ",round(var(w_2),1));
+  figA <- plot_conditionals(w_1,w_2,title=title);
+  figB <- plot_ranks(w_1,w_2)
+  ggarrange(figA,figB,nrow = 1,ncol=2,labels = LETTERS[1:2]) %>% 
     print(.)
+  
   
 }
 
