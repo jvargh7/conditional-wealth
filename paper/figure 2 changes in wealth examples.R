@@ -1,3 +1,5 @@
+require(tidyverse)
+require(ggpubr)
 plot_conditionals <- function(t_1,t_2,title=""){
   
   c_2 = residuals(lm(t_2 ~ t_1))
@@ -117,13 +119,16 @@ pdf(file = "paper/Supplementary File 2.pdf")
 for (i in 1:nrow(params)){
   w_2 = params[i,]$b0 + params[i,]$b1*w_1 + rnorm(1000,0,params[i,]$sigma)
   title = paste0("S2Fig ",i,": \nExample with ",
-                 "w_2 = ",params[i,]$b0," + ",
+                 "w_1 = N(0,1)",
+                 "\nw_2 = ",params[i,]$b0," + ",
                  params[i,]$b1,"*w_1 + N(0,",
                  params[i,]$sigma,")",
-                 "; \nVariance at time 2: time 1 = ",round(var(w_2),1));
-  figA <- plot_conditionals(w_1,w_2,title=title);
+                 "\nRatio of variance at time 2: time 1 = ",round(var(w_2),1));
+  figA <- plot_conditionals(w_1,w_2,title="");
   figB <- plot_ranks(w_1,w_2)
   ggarrange(figA,figB,nrow = 1,ncol=2,labels = LETTERS[1:2]) %>% 
+    annotate_figure(., top = text_grob(title, 
+                                          color = "black", face = "bold", size = 12)) %>% 
     print(.)
   
   
