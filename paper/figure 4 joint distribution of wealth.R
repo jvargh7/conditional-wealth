@@ -1,7 +1,7 @@
 
 cw_df <- readRDS(paste0(path_dissertation,"/aim 0/working/cw_df.RDS"))
 
-library(GGally)
+require(GGally)
 conflict_prefer("wrap", "GGally")
 
 source(paste0(path_incap_repo,"/2015-18/cor_func for GGAlly.R"))
@@ -33,6 +33,10 @@ panelA <- ggpairs(cw_df %>%
           ggally_barDiag(data = data, mapping = mapping) + 
             theme(panel.background = element_blank())}
         ))
+
+ggsave(panelA,height=6,width=6,
+       filename = paste0(path_dissertation,"/aim 0/figures/figure_joint distribution of wealth.tiff"))
+
 
 panelB <- cw_df %>% 
   dplyr::select(uncchdid,starts_with("cwealth")) %>% 

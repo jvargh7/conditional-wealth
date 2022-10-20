@@ -30,7 +30,7 @@ associations %>%
   pivot_wider(names_from = sex,values_from=coef_ci) %>% 
   write.csv(paste0(path_dissertation,"/aim 0/working/supplementary table 3 coefficients sex stratified.csv"))
 
-associations %>% 
+fig5 <- associations %>% 
   dplyr::filter(term %in% c("pc1983",
                             "cwealth1991",
                             "cwealth1994",
@@ -68,3 +68,5 @@ associations %>%
   scale_shape_manual(name="",values=c(1,2,3)) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n"))
 
+ggsave(fig5,height=4,width=8,
+       filename = paste0(path_dissertation,"/aim 0/figures/figure_sex stratified association.tiff"))
